@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal CBT Matematika - SMPN 61</title>
+    <style>
+        /* === TEMA & LAYOUT UTAMA === */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { 
+            background-image: url('bg.jpg'); 
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed;
+            color: #333; 
+            display: flex; 
+            justify-content: center; 
+            min-height: 100vh; 
+        }
+        .app-container { 
+            max-width: 480px; 
+            width: 100%; 
+            background-color: rgba(247, 249, 252, 0.95); /* Transparan 95% agar bg.jpg terlihat */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            position: relative; 
+            overflow-x: hidden; 
+            padding-bottom: 40px; 
+        }
+        
+        /* === HEADER === */
+        .banner { 
+            width: 100%; 
+            height: 150px; 
+            background-image: url('header.jpg'); 
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat;
+        }
+        
+        /* === PROFIL & LOGO === */
+        .profile-section { text-align: center; margin-top: -50px; padding: 0 20px; }
+        
+        /* Logo dibuat utuh, tidak dipotong bulat */
+        .profile-section img { 
+            width: 100px; 
+            height: 100px; 
+            object-fit: contain; 
+            background: transparent; 
+            cursor: default; 
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+        }
+        
+        .profile-section h1 { font-size: 20px; font-weight: 700; color: #1e5276; margin-top: 10px; }
+        .profile-section .subtitle { font-size: 13px; color: #666; margin-bottom: 5px; }
+        .profile-section .target-kelas { font-size: 14px; font-weight: bold; color: #e74c3c; margin-bottom: 15px; background: #fdf2f0; display: inline-block; padding: 4px 12px; border-radius: 20px; border: 1px solid #fadbd8; }
+
+        /* === ACCORDION / DAFTAR LINK === */
+        .cbt-section { padding: 0 20px; display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        .accordion-item { background: #fff; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; }
+        
+        .accordion-header { padding: 15px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: #fff; transition: 0.3s; }
+        .accordion-header:hover { background: #f0f4f8; }
+        .header-left { display: flex; align-items: center; gap: 12px; font-weight: bold; color: #1e5276; font-size: 15px; }
+        
+        /* Ikon dibuat utuh, tidak dipotong bulat */
+        .header-left img { 
+            width: 55px; 
+            height: 75px; 
+            object-fit: contain; 
+            background: transparent;
+        }
+        
+        .arrow { transition: transform 0.3s; font-size: 12px; color: #999; }
+        .accordion-item.active .arrow { transform: rotate(180deg); }
+
+        .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: #fafcff; }
+        .accordion-item.active .accordion-body { max-height: 1000px; }
+        .link-group { padding: 0 15px 15px 15px; }
+        .link-group h4 { font-size: 13px; color: #888; margin: 10px 0 10px 5px; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 5px;}
+
+        /* === BARIS TOMBOL LINK & GEMBOK MINI === */
+        .link-item { display: flex; gap: 8px; margin-bottom: 8px; align-items: stretch; }
+        
+        .cbt-link { flex-grow: 1; text-decoration: none; padding: 12px; border-radius: 8px; text-align: center; font-weight: 600; font-size: 14px; transition: 0.3s; color: white; background: linear-gradient(90deg, #1e5276, #2980b9); display: flex; align-items: center; justify-content: center; }
+        .cbt-link:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(41,128,185,0.3); }
+        
+        /* Status Link Terkunci */
+        .cbt-link.is-locked { background: #dcdde1; color: #7f8fa6; cursor: not-allowed; pointer-events: none; border: 2px dashed #b2bec3; box-shadow: none; }
+        
+        /* Gembok Mini */
+        .btn-mini-lock { flex-shrink: 0; width: 45px; border-radius: 8px; border: none; cursor: pointer; transition: 0.3s; font-size: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn-mini-lock.locked { background: #e74c3c; color: white; }
+        .btn-mini-lock.unlocked { background: #2ecc71; color: white; }
+        .btn-mini-lock:hover { opacity: 0.8; }
+
+        /* === MODAL ADMIN === */
+        #adminModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: white; width: 100%; max-width: 450px; border-radius: 15px; padding: 20px; max-height: 90vh; overflow-y: auto; }
+        .modal-content h3 { color: #1e5276; margin-bottom: 15px; text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        
+        /* Checkbox Kelas */
+        .checkbox-group { background: #f4f6f9; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #e1e8ed; }
+        .checkbox-group label.group-title { display: block; font-size: 13px; font-weight: bold; color: #333; margin-bottom: 8px; }
+        .checkbox-inline { display: flex; gap: 15px; font-size: 14px; color: #555; }
+        .checkbox-inline label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 4px; }
+        .form-group input[type="url"] { width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; }
+        
+        .btn-save { width: 100%; background: #27ae60; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 15px; }
+        .btn-save:hover { background: #219150; }
+        .btn-close { width: 100%; background: #e74c3c; color: white; padding: 10px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- HEADER -->
+        <div class="banner"></div>
+
+        <div class="profile-section">
+            <!-- PINTU RAHASIA ADMIN ADA DI LOGO INI (Ketuk 3x) -->
+            <img src="logo61.jpg" alt="Logo SMPN 61" id="secretLogoBtn">
+            <h1>Portal CBT Matematika<br>SMPN 61</h1>
+            <p class="subtitle">Pusat Evaluasi, Kuis & Ujian Terpadu</p>
+            <div id="display-kelas" class="target-kelas" style="display:none;">Target Kelas: </div>
+        </div>
+
+        <!-- DAFTAR KATEGORI UJIAN -->
+        <div class="cbt-section">
+            
+            <!-- TES FORMATIF & QUIZ -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="header-left">
+                        <img src="icon formatif.jpg" alt="Formatif Emoticon">
+                        Tes Formatif dan Quiz
+                    </div>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="accordion-body">
+                    <div class="link-group">
+                        <h4>Tes Formatif</h4>
+                        
+                        <div class="link-item">
+                            <a href="#" id="link-f1" class="cbt-link is-locked" target="_blank">Formatif 1</a>
+                            <button id="lockbtn-link-f1" class="btn-mini-lock locked" onclick="toggleSingleLock('link-f1')" title="Kunci/Buka">🔒</button>
+                        </div>
+                        <div class="link-item">
+                            <a href="#" id="link-f2" class="cbt-link is-locked" target="_blank">Formatif 2</a>
+                            <button id="lockbtn-link-f2" class="btn-mini-lock locked" onclick="toggleSingleLock('link-f2')" title="Kunci/Buka">🔒</button>
+                        </div>
+                        <div class="link-item">
+                            <a href="#" id="link-f3" class="cbt-link is-locked" target="_blank">Formatif 3</a>
+                            <button id="lockbtn-link-f3" class="btn-mini-lock locked" onclick="toggleSingleLock('link-f3')" title="Kunci/Buka">🔒</button>
+                        </div>
+                        <div class="link-item">
+                            <a href="#" id="link-f4" class="cbt-link is-locked" target="_blank">Formatif 4</a>
+                            <button id="lockbtn-link-f4" class="btn-mini-lock locked" onclick="toggleSingleLock('link-f4')" title="Kunci/Buka">🔒</button>
+                        </div>
+                        <div class="link-item">
+                            <a href="#" id="link-f5" class="cbt-link is-locked" target="_blank">Formatif 5</a>
+                            <button id="lockbtn-link-f5" class="btn-mini-lock locked" onclick="toggleSingleLock('link-f5')" title="Kunci/Buka">🔒</button>
+                        </div>
+                        
+                        <h4>Quiz</h4>
+                        <div class="link-item">
+                            <a href="#" id="link-q1" class="cbt-link is-locked" target="_blank">Quiz 1</a>
+                            <button id="lockbtn-link-q1" class="btn-mini-lock locked" onclick="toggleSingleLock('link-q1')" title="Kunci/Buka">🔒</button>
+                        </div>
+                        <div class="link-item">
+                            <a href="#" id="link-q2" class="cbt-link is-locked" target="_blank">Quiz 2</a>
+                            <button id="lockbtn-link-q2" class="btn-mini-lock locked" onclick="toggleSingleLock('link-q2')" title="Kunci/Buka">🔒</button>
+                        </div>
+                        <div class="link-item">
+                            <a href="#" id="link-q3" class="cbt-link is-locked" target="_blank">Quiz 3</a>
+                            <button id="lockbtn-link-q3" class="btn-mini-lock locked" onclick="toggleSingleLock('link-q3')" title="Kunci/Buka">🔒</button>
+                        </div>
+                        <div class="link-item">
+                            <a href="#" id="link-q4" class="cbt-link is-locked" target="_blank">Quiz 4</a>
+                            <button id="lockbtn-link-q4" class="btn-mini-lock locked" onclick="toggleSingleLock('link-q4')" title="Kunci/Buka">🔒</button>
+                        </div>
+                        <div class="link-item">
+                            <a href="#" id="link-q5" class="cbt-link is-locked" target="_blank">Quiz 5</a>
+                            <button id="lockbtn-link-q5" class="btn-mini-lock locked" onclick="toggleSingleLock('link-q5')" title="Kunci/Buka">🔒</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- TENGAH SEMESTER -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="header-left">
+                        <img src="icon sumatif tengah.jpg" alt="UTS Emoticon">
+                        Tes Sumatif Tengah Semester
+                    </div>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="accordion-body">
+                    <div class="link-group">
+                        <br>
+                        <div class="link-item">
+                            <a href="#" id="link-uts-ganjil" class="cbt-link is-locked" target="_blank">Tengah Semester Ganjil</a>
+                            <button id="lockbtn-link-uts-ganjil" class="btn-mini-lock locked" onclick="toggleSingleLock('link-uts-ganjil')" title="Kunci/Buka">🔒</button>
+                        </div>
+                        <div class="link-item">
+                            <a href="#" id="link-uts-genap" class="cbt-link is-locked" target="_blank">Tengah Semester Genap</a>
+                            <button id="lockbtn-link-uts-genap" class="btn-mini-lock locked" onclick="toggleSingleLock('link-uts-genap')" title="Kunci/Buka">🔒</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AKHIR SEMESTER -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="header-left">
+                        <img src="icon sumatif akhir.jpg" alt="UAS Emoticon">
+                        Tes Sumatif Akhir Semester
+                    </div>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="accordion-body">
+                    <div class="link-group">
+                        <br>
+                        <div class="link-item">
+                            <a href="#" id="link-uas-ganjil" class="cbt-link is-locked" target="_blank">Akhir Semester Ganjil</a>
+                            <button id="lockbtn-link-uas-ganjil" class="btn-mini-lock locked" onclick="toggleSingleLock('link-uas-ganjil')" title="Kunci/Buka">🔒</button>
+                        </div>
+                        <div class="link-item">
+                            <a href="#" id="link-uas-genap" class="cbt-link is-locked" target="_blank">Akhir Semester Genap</a>
+                            <button id="lockbtn-link-uas-genap" class="btn-mini-lock locked" onclick="toggleSingleLock('link-uas-genap')" title="Kunci/Buka">🔒</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL PANEL ADMIN -->
+    <div id="adminModal">
+        <div class="modal-content">
+            <h3>⚙️ Panel Admin</h3>
+            
+            <div class="checkbox-group">
+                <label class="group-title">Target Kelas (Centang yang sesuai):</label>
+                <div class="checkbox-inline">
+                    <label><input type="checkbox" id="chk-kelas7" value="7"> Kelas 7</label>
+                    <label><input type="checkbox" id="chk-kelas8" value="8"> Kelas 8</label>
+                    <label><input type="checkbox" id="chk-kelas9" value="9"> Kelas 9</label>
+                </div>
+            </div>
+
+            <p style="font-size:12px; color:#666; margin-bottom:15px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">Input Tautan Ujian:</p>
+            <div id="form-inputs-container">
+                <!-- Javascript will populate inputs here -->
+            </div>
+
+            <button class="btn-save" onclick="saveAndDownload()">💾 Simpan & Unduh HTML Baru</button>
+            <button class="btn-close" onclick="closeAdmin()">Batal / Tutup</button>
+        </div>
+    </div>
+
+    <script>
+        // 1. Sistem Accordion
+        function toggleAccordion(element) {
+            let item = element.parentElement;
+            item.classList.toggle('active');
+        }
+
+        const linkList = [
+            { id: 'link-f1', label: 'Formatif 1' }, { id: 'link-f2', label: 'Formatif 2' },
+            { id: 'link-f3', label: 'Formatif 3' }, { id: 'link-f4', label: 'Formatif 4' },
+            { id: 'link-f5', label: 'Formatif 5' },
+            { id: 'link-q1', label: 'Quiz 1' }, { id: 'link-q2', label: 'Quiz 2' },
+            { id: 'link-q3', label: 'Quiz 3' }, { id: 'link-q4', label: 'Quiz 4' },
+            { id: 'link-q5', label: 'Quiz 5' },
+            { id: 'link-uts-ganjil', label: 'Tengah Sem. Ganjil' }, { id: 'link-uts-genap', label: 'Tengah Sem. Genap' },
+            { id: 'link-uas-ganjil', label: 'Akhir Sem. Ganjil' }, { id: 'link-uas-genap', label: 'Akhir Sem. Genap' }
+        ];
+
+        // 2. Sistem Gembok Individu - Sandi: GURU61
+        function toggleSingleLock(id) {
+            let link = document.getElementById(id);
+            let btn = document.getElementById('lockbtn-' + id);
+            
+            if (link.classList.contains('is-locked')) {
+                let pass = prompt("Masukkan Sandi Ujian untuk membuka link ini:");
+                if (pass === "GURU61") {
+                    link.classList.remove('is-locked');
+                    btn.classList.remove('locked');
+                    btn.classList.add('unlocked');
+                    btn.innerHTML = "🔓";
+                } else if (pass !== null) {
+                    alert("Sandi Salah!");
+                }
+            } else {
+                link.classList.add('is-locked');
+                btn.classList.remove('unlocked');
+                btn.classList.add('locked');
+                btn.innerHTML = "🔒";
+            }
+        }
+
+        // 3. Pintu Rahasia Panel Admin (Ketuk Logo 3x Cepat)
+        let clickCount = 0;
+        let clickTimer;
+        
+        document.getElementById('secretLogoBtn').addEventListener('click', function() {
+            clickCount++;
+            if (clickCount === 1) {
+                clickTimer = setTimeout(function() { clickCount = 0; }, 1000); 
+            }
+            if (clickCount === 3) {
+                clearTimeout(clickTimer);
+                clickCount = 0;
+                openAdmin(); 
+            }
+        });
+
+        // 4. Sistem Admin (D6655ALO)
+        function openAdmin() {
+            let adminPass = prompt("Sistem Administrator. Masukkan Sandi:");
+            if (adminPass === "D6655ALO") {
+                let container = document.getElementById('form-inputs-container');
+                container.innerHTML = ''; 
+                
+                linkList.forEach(item => {
+                    let currentLink = document.getElementById(item.id).getAttribute('href');
+                    if(currentLink === "#") currentLink = ""; 
+                    container.innerHTML += `
+                        <div class="form-group">
+                            <label>${item.label}</label>
+                            <input type="url" id="input-${item.id}" placeholder="https://..." value="${currentLink}">
+                        </div>
+                    `;
+                });
+                document.getElementById('adminModal').style.display = 'flex';
+            } else if (adminPass !== null) {
+                alert("Akses Ditolak. Sandi Administrator Salah!");
+            }
+        }
+
+        function closeAdmin() { document.getElementById('adminModal').style.display = 'none'; }
+
+        function saveAndDownload() {
+            let k7 = document.getElementById('chk-kelas7');
+            let k8 = document.getElementById('chk-kelas8');
+            let k9 = document.getElementById('chk-kelas9');
+            let labelDisplay = document.getElementById('display-kelas');
+            
+            let selected = [];
+            
+            if(k7.checked) { k7.setAttribute('checked', 'checked'); selected.push("7"); } else { k7.removeAttribute('checked'); }
+            if(k8.checked) { k8.setAttribute('checked', 'checked'); selected.push("8"); } else { k8.removeAttribute('checked'); }
+            if(k9.checked) { k9.setAttribute('checked', 'checked'); selected.push("9"); } else { k9.removeAttribute('checked'); }
+
+            if(selected.length > 0) {
+                labelDisplay.innerText = "Target Kelas: " + selected.join(", ");
+                labelDisplay.style.display = "inline-block";
+            } else {
+                labelDisplay.style.display = "none";
+            }
+
+            linkList.forEach(item => {
+                let inputVal = document.getElementById('input-' + item.id).value.trim();
+                let aTag = document.getElementById(item.id);
+                if (inputVal !== "") { aTag.setAttribute('href', inputVal); } 
+                else { aTag.setAttribute('href', "#"); }
+            });
+
+            closeAdmin();
+
+            setTimeout(() => {
+                let htmlContent = "<!DOCTYPE html>\n<html lang=\"id\">\n" + document.documentElement.innerHTML + "\n</html>";
+                let blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
+                let a = document.createElement("a");
+                a.href = URL.createObjectURL(blob);
+                
+                let fileNameExt = selected.length > 0 ? "_Kelas_" + selected.join("") : "";
+                a.download = "Portal_CBT_SMPN61" + fileNameExt + ".html"; 
+                
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                alert("Sukses! File berhasil diunduh.");
+            }, 500);
+        }
+    </script>
+</body>
+</html>
