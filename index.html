@@ -60,13 +60,14 @@
         .tab-btn:hover { background: rgba(255,255,255,0.9); }
         .tab-btn.active { background: #1e5276; color: white; box-shadow: 0 4px 10px rgba(30,82,118,0.4); }
         
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+        /* PERBAIKAN BUG TAB DI SINI */
+        .tab-content { display: none !important; }
+        .tab-content.active { display: flex !important; animation: fadeIn 0.4s ease-in-out; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
         /* === ACCORDION / DAFTAR LINK === */
-        .cbt-section { padding: 0 20px; display: flex; flex-direction: column; gap: 15px; }
+        .cbt-section { padding: 0 20px; flex-direction: column; gap: 15px; }
         .accordion-item { background: rgba(255,255,255,0.95); border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; }
         
         .accordion-header { padding: 15px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: transparent; transition: 0.3s; }
@@ -140,7 +141,7 @@
             <button class="tab-btn" onclick="openClassTab('9', this)">KELAS 9</button>
         </div>
 
-        <!-- KONTEN UNTUK MASING-MASING KELAS DIGENERATE VIA JAVASCRIPT AGAR KODE RAPI -->
+        <!-- KONTEN UNTUK MASING-MASING KELAS DIGENERATE VIA JAVASCRIPT -->
         <div id="cbt-container"></div>
 
     </div>
@@ -184,12 +185,10 @@
 
         const grades = ['7', '8', '9'];
 
-        // FUNGSI 1: GENERATE HTML UNTUK 3 KELAS (42 LINK) SECARA OTOMATIS SAAT HALAMAN DIMUAT
+        // FUNGSI 1: GENERATE HTML UNTUK 3 KELAS
         function initApp() {
             let container = document.getElementById('cbt-container');
             
-            // Hanya jalankan generate jika konten kosong (pertama kali dibuat). 
-            // Jika file sudah didownload, HTML sudah ada, tidak perlu dirender ulang agar status gembok awet.
             if(container.innerHTML.trim() === "") {
                 let html = "";
                 grades.forEach((grade, index) => {
@@ -201,22 +200,23 @@
                     html += `
                     <div class="accordion-item">
                         <div class="accordion-header" onclick="toggleAccordion(this)">
-                            <div class="header-left"><img src="icon formatif.jpg" alt="Formatif">Tes Formatif dan Quiz (Kelas ${grade})</div>
+                            <div class="header-left"><img src="icon formatif.jpg" alt="Formatif">Tes Formatif dan Quiz</div>
                             <span class="arrow">▼</span>
                         </div>
                         <div class="accordion-body">
                             <div class="link-group">
                                 <h4>Tes Formatif</h4>`;
                                 examStructure.filter(e => e.type === 'formatif').forEach(exam => {
+                                    // PENAMBAHAN TEKS (Kelas *) PADA TOMBOL
                                     html += `<div class="link-item">
-                                        <a href="#" id="link-${grade}-${exam.id}" class="cbt-link is-locked" target="_blank">${exam.label}</a>
+                                        <a href="#" id="link-${grade}-${exam.id}" class="cbt-link is-locked" target="_blank">${exam.label} (Kelas ${grade})</a>
                                         <button id="lockbtn-link-${grade}-${exam.id}" class="btn-mini-lock locked" onclick="toggleSingleLock('link-${grade}-${exam.id}')" title="Kunci/Buka">🔒</button>
                                     </div>`;
                                 });
                     html += `   <h4>Quiz</h4>`;
                                 examStructure.filter(e => e.type === 'quiz').forEach(exam => {
                                     html += `<div class="link-item">
-                                        <a href="#" id="link-${grade}-${exam.id}" class="cbt-link is-locked" target="_blank">${exam.label}</a>
+                                        <a href="#" id="link-${grade}-${exam.id}" class="cbt-link is-locked" target="_blank">${exam.label} (Kelas ${grade})</a>
                                         <button id="lockbtn-link-${grade}-${exam.id}" class="btn-mini-lock locked" onclick="toggleSingleLock('link-${grade}-${exam.id}')" title="Kunci/Buka">🔒</button>
                                     </div>`;
                                 });
@@ -233,7 +233,7 @@
                             <div class="link-group"><br>`;
                                 examStructure.filter(e => e.type === 'uts').forEach(exam => {
                                     html += `<div class="link-item">
-                                        <a href="#" id="link-${grade}-${exam.id}" class="cbt-link is-locked" target="_blank">${exam.label}</a>
+                                        <a href="#" id="link-${grade}-${exam.id}" class="cbt-link is-locked" target="_blank">${exam.label} (Kelas ${grade})</a>
                                         <button id="lockbtn-link-${grade}-${exam.id}" class="btn-mini-lock locked" onclick="toggleSingleLock('link-${grade}-${exam.id}')" title="Kunci/Buka">🔒</button>
                                     </div>`;
                                 });
@@ -250,7 +250,7 @@
                             <div class="link-group"><br>`;
                                 examStructure.filter(e => e.type === 'uas').forEach(exam => {
                                     html += `<div class="link-item">
-                                        <a href="#" id="link-${grade}-${exam.id}" class="cbt-link is-locked" target="_blank">${exam.label}</a>
+                                        <a href="#" id="link-${grade}-${exam.id}" class="cbt-link is-locked" target="_blank">${exam.label} (Kelas ${grade})</a>
                                         <button id="lockbtn-link-${grade}-${exam.id}" class="btn-mini-lock locked" onclick="toggleSingleLock('link-${grade}-${exam.id}')" title="Kunci/Buka">🔒</button>
                                     </div>`;
                                 });
@@ -264,12 +264,9 @@
 
         // FUNGSI 2: PINDAH TAB SISWA
         function openClassTab(grade, btnElement) {
-            // Sembunyikan semua konten kelas
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            // Reset semua warna tombol
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             
-            // Tampilkan yang dipilih
             document.getElementById('content-kelas' + grade).classList.add('active');
             btnElement.classList.add('active');
         }
@@ -313,7 +310,6 @@
                 let adminPass = prompt("Sistem Admin CBT. Masukkan Sandi (D6655ALO):");
                 if (adminPass === "D6655ALO") {
                     document.getElementById('adminModal').style.display = 'flex';
-                    // Reset dropdown ke kelas 7 setiap kali buka
                     document.getElementById('admin-class-select').value = "7";
                     loadAdminInputs(); 
                 } else if (adminPass !== null) {
@@ -328,12 +324,9 @@
             let warningText = document.getElementById('admin-warning-text');
             let container = document.getElementById('form-inputs-container');
             
-            // Update Teks Peringatan
             warningText.innerText = "⚠️ MENGISI LINK KELAS " + selectedGrade;
-
             container.innerHTML = '';
             
-            // Loop 14 ujian untuk kelas yang dipilih
             examStructure.forEach(exam => {
                 let fullId = `link-${selectedGrade}-${exam.id}`;
                 let currentLink = document.getElementById(fullId).getAttribute('href');
@@ -342,7 +335,6 @@
                 container.innerHTML += `
                     <div class="form-group">
                         <label>${exam.label} (KLS ${selectedGrade})</label>
-                        <!-- PENTING: Atribut oninput akan langsung mengubah isi href di background secara real-time -->
                         <input type="url" placeholder="https://..." value="${currentLink}" 
                                oninput="document.getElementById('${fullId}').setAttribute('href', this.value || '#')">
                     </div>
