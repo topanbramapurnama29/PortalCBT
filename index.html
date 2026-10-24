@@ -60,15 +60,14 @@
         .tab-btn:hover { background: rgba(255,255,255,0.9); }
         .tab-btn.active { background: #1e5276; color: white; box-shadow: 0 4px 10px rgba(30,82,118,0.4); }
         
-        /* PERBAIKAN BUG TAB DI SINI */
         .tab-content { display: none !important; }
-        .tab-content.active { display: flex !important; animation: fadeIn 0.4s ease-in-out; }
+        .tab-content.active { display: flex !important; flex-direction: column; animation: fadeIn 0.4s ease-in-out; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
         /* === ACCORDION / DAFTAR LINK === */
-        .cbt-section { padding: 0 20px; flex-direction: column; gap: 15px; }
-        .accordion-item { background: rgba(255,255,255,0.95); border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; }
+        .cbt-section { padding: 0 20px; gap: 15px; }
+        .accordion-item { background: rgba(255,255,255,0.95); border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 15px;}
         
         .accordion-header { padding: 15px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: transparent; transition: 0.3s; }
         .accordion-header:hover { background: #f0f4f8; }
@@ -84,20 +83,10 @@
         .link-group { padding: 0 15px 15px 15px; }
         .link-group h4 { font-size: 13px; color: #888; margin: 10px 0 10px 5px; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 5px;}
 
-        /* === BARIS TOMBOL LINK & GEMBOK MINI === */
-        .link-item { display: flex; gap: 8px; margin-bottom: 8px; align-items: stretch; }
-        
-        .cbt-link { flex-grow: 1; text-decoration: none; padding: 12px; border-radius: 8px; text-align: center; font-weight: 600; font-size: 14px; transition: 0.3s; color: white; background: linear-gradient(90deg, #1e5276, #2980b9); display: flex; align-items: center; justify-content: center; }
+        /* === TOMBOL LINK UJIAN === */
+        .link-item { margin-bottom: 8px; }
+        .cbt-link { display: block; width: 100%; text-decoration: none; padding: 12px; border-radius: 8px; text-align: center; font-weight: 600; font-size: 14px; transition: 0.3s; color: white; background: linear-gradient(90deg, #1e5276, #2980b9); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .cbt-link:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(41,128,185,0.3); }
-        
-        /* Status Link Terkunci */
-        .cbt-link.is-locked { background: #dcdde1; color: #7f8fa6; cursor: not-allowed; pointer-events: none; border: 2px dashed #b2bec3; box-shadow: none; }
-        
-        /* Gembok Mini */
-        .btn-mini-lock { flex-shrink: 0; width: 45px; border-radius: 8px; border: none; cursor: pointer; transition: 0.3s; font-size: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .btn-mini-lock.locked { background: #e74c3c; color: white; }
-        .btn-mini-lock.unlocked { background: #2ecc71; color: white; }
-        .btn-mini-lock:hover { opacity: 0.8; }
 
         /* === MODAL ADMIN === */
         #adminModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 999; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(5px); }
@@ -110,14 +99,27 @@
         .admin-warning-box select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ffeeba; font-weight: bold; font-size: 15px; text-align: center; background: #fff; cursor: pointer; }
         #admin-warning-text { font-size: 16px; font-weight: 900; color: #dc3545; margin-top: 12px; text-transform: uppercase; }
 
+        /* Row Input & Tombol Simpan Mini */
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 4px; }
-        .form-group input[type="url"] { width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; background: #fdfdfd; transition: 0.3s; }
-        .form-group input[type="url"]:focus { border-color: #2980b9; outline: none; background: #fff; }
+        .input-row { display: flex; gap: 8px; }
+        .input-row input[type="url"] { flex-grow: 1; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; background: #fdfdfd; transition: 0.3s; }
+        .input-row input[type="url"]:focus { border-color: #2980b9; outline: none; background: #fff; }
         
-        .btn-save { width: 100%; background: #27ae60; color: white; padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 15px; transition: 0.3s; }
+        /* Tombol Simpan Mini Per-Link */
+        .btn-save-mini { flex-shrink: 0; background: #f39c12; color: white; border: none; padding: 0 15px; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .btn-save-mini:hover { background: #e67e22; }
+        .btn-save-mini.saved-success { background: #27ae60 !important; color: white !important; }
+
+        /* Trio Tombol Admin */
+        .btn-copy { width: 100%; background: #3498db; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 14px; transition: 0.3s; }
+        .btn-copy:hover { background: #2980b9; }
+        
+        .btn-save { width: 100%; background: #27ae60; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 14px; transition: 0.3s; }
         .btn-save:hover { background: #219150; }
-        .btn-close { width: 100%; background: #e74c3c; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 14px; }
+        
+        .btn-close { width: 100%; background: #e74c3c; color: white; padding: 10px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 14px; transition: 0.3s; }
+        .btn-close:hover { background: #c0392b; }
     </style>
 </head>
 <body>
@@ -141,7 +143,7 @@
             <button class="tab-btn" onclick="openClassTab('9', this)">KELAS 9</button>
         </div>
 
-        <!-- KONTEN UNTUK MASING-MASING KELAS DIGENERATE VIA JAVASCRIPT -->
+        <!-- KONTEN UNTUK MASING-MASING KELAS -->
         <div id="cbt-container"></div>
 
     </div>
@@ -165,8 +167,10 @@
                 <!-- Javascript will populate inputs here dynamically -->
             </div>
 
+            <!-- TRIO TOMBOL ADMIN -->
+            <button class="btn-copy" onclick="copyHTML()">📋 Salin Koding HTML</button>
             <button class="btn-save" onclick="saveAndDownload()">💾 Simpan & Unduh HTML Baru</button>
-            <button class="btn-close" onclick="closeAdmin()">Batal / Tutup</button>
+            <button class="btn-close" onclick="closeAdmin()">❌ Batal / Tutup</button>
         </div>
     </div>
 
@@ -191,7 +195,7 @@
             
             if(container.innerHTML.trim() === "") {
                 let html = "";
-                grades.forEach((grade, index) => {
+                grades.forEach((grade) => {
                     let isActive = (grade === '7') ? 'active' : '';
                     
                     html += `<div id="content-kelas${grade}" class="tab-content ${isActive} cbt-section">`;
@@ -207,17 +211,14 @@
                             <div class="link-group">
                                 <h4>Tes Formatif</h4>`;
                                 examStructure.filter(e => e.type === 'formatif').forEach(exam => {
-                                    // PENAMBAHAN TEKS (Kelas *) PADA TOMBOL
                                     html += `<div class="link-item">
-                                        <a href="#" id="link-${grade}-${exam.id}" class="cbt-link is-locked" target="_blank">${exam.label} (Kelas ${grade})</a>
-                                        <button id="lockbtn-link-${grade}-${exam.id}" class="btn-mini-lock locked" onclick="toggleSingleLock('link-${grade}-${exam.id}')" title="Kunci/Buka">🔒</button>
+                                        <a href="#" id="link-${grade}-${exam.id}" class="cbt-link" target="_blank">${exam.label} (Kelas ${grade})</a>
                                     </div>`;
                                 });
                     html += `   <h4>Quiz</h4>`;
                                 examStructure.filter(e => e.type === 'quiz').forEach(exam => {
                                     html += `<div class="link-item">
-                                        <a href="#" id="link-${grade}-${exam.id}" class="cbt-link is-locked" target="_blank">${exam.label} (Kelas ${grade})</a>
-                                        <button id="lockbtn-link-${grade}-${exam.id}" class="btn-mini-lock locked" onclick="toggleSingleLock('link-${grade}-${exam.id}')" title="Kunci/Buka">🔒</button>
+                                        <a href="#" id="link-${grade}-${exam.id}" class="cbt-link" target="_blank">${exam.label} (Kelas ${grade})</a>
                                     </div>`;
                                 });
                     html += `</div></div></div>`;
@@ -233,8 +234,7 @@
                             <div class="link-group"><br>`;
                                 examStructure.filter(e => e.type === 'uts').forEach(exam => {
                                     html += `<div class="link-item">
-                                        <a href="#" id="link-${grade}-${exam.id}" class="cbt-link is-locked" target="_blank">${exam.label} (Kelas ${grade})</a>
-                                        <button id="lockbtn-link-${grade}-${exam.id}" class="btn-mini-lock locked" onclick="toggleSingleLock('link-${grade}-${exam.id}')" title="Kunci/Buka">🔒</button>
+                                        <a href="#" id="link-${grade}-${exam.id}" class="cbt-link" target="_blank">${exam.label} (Kelas ${grade})</a>
                                     </div>`;
                                 });
                     html += `</div></div></div>`;
@@ -250,13 +250,12 @@
                             <div class="link-group"><br>`;
                                 examStructure.filter(e => e.type === 'uas').forEach(exam => {
                                     html += `<div class="link-item">
-                                        <a href="#" id="link-${grade}-${exam.id}" class="cbt-link is-locked" target="_blank">${exam.label} (Kelas ${grade})</a>
-                                        <button id="lockbtn-link-${grade}-${exam.id}" class="btn-mini-lock locked" onclick="toggleSingleLock('link-${grade}-${exam.id}')" title="Kunci/Buka">🔒</button>
+                                        <a href="#" id="link-${grade}-${exam.id}" class="cbt-link" target="_blank">${exam.label} (Kelas ${grade})</a>
                                     </div>`;
                                 });
                     html += `</div></div></div>`;
 
-                    html += `</div>`; // Tutup tab content
+                    html += `</div>`;
                 });
                 container.innerHTML = html;
             }
@@ -271,31 +270,9 @@
             btnElement.classList.add('active');
         }
 
-        // FUNGSI 3: AKORDION & GEMBOK SISWA (Sandi: GURU61)
+        // FUNGSI 3: BUKA-TUTUP ACCORDION
         function toggleAccordion(element) {
             element.parentElement.classList.toggle('active');
-        }
-
-        function toggleSingleLock(id) {
-            let link = document.getElementById(id);
-            let btn = document.getElementById('lockbtn-' + id);
-            
-            if (link.classList.contains('is-locked')) {
-                let pass = prompt("Sandi Ujian (GURU61):");
-                if (pass === "GURU61") {
-                    link.classList.remove('is-locked');
-                    btn.classList.remove('locked');
-                    btn.classList.add('unlocked');
-                    btn.innerHTML = "🔓";
-                } else if (pass !== null) {
-                    alert("Sandi Salah!");
-                }
-            } else {
-                link.classList.add('is-locked');
-                btn.classList.remove('unlocked');
-                btn.classList.add('locked');
-                btn.innerHTML = "🔒";
-            }
         }
 
         // FUNGSI 4: ADMIN PINTU RAHASIA (3x Ketuk Logo)
@@ -307,7 +284,7 @@
                 clearTimeout(clickTimer);
                 clickCount = 0;
                 
-                let adminPass = prompt("Sistem Admin CBT. Masukkan Sandi :");
+                let adminPass = prompt("Masukkan Sandi Admin:");
                 if (adminPass === "D6655ALO") {
                     document.getElementById('adminModal').style.display = 'flex';
                     document.getElementById('admin-class-select').value = "7";
@@ -318,7 +295,7 @@
             }
         });
 
-        // FUNGSI 5: LOAD INPUTAN ADMIN BERDASARKAN KELAS YANG DIPILIH
+        // FUNGSI 5: LOAD INPUTAN ADMIN BERDASARKAN KELAS
         function loadAdminInputs() {
             let selectedGrade = document.getElementById('admin-class-select').value;
             let warningText = document.getElementById('admin-warning-text');
@@ -332,34 +309,68 @@
                 let currentLink = document.getElementById(fullId).getAttribute('href');
                 if(currentLink === "#") currentLink = ""; 
                 
+                // Perubahan ada di sini: Menambahkan tombol "Simpan" mini untuk setiap input
                 container.innerHTML += `
                     <div class="form-group">
                         <label>${exam.label} (KLS ${selectedGrade})</label>
-                        <input type="url" placeholder="https://..." value="${currentLink}" 
-                               oninput="document.getElementById('${fullId}').setAttribute('href', this.value || '#')">
+                        <div class="input-row">
+                            <input type="url" id="input-${fullId}" placeholder="https://..." value="${currentLink}">
+                            <button class="btn-save-mini" onclick="saveSingleLink('${fullId}', 'input-${fullId}', this)">💾 Simpan</button>
+                        </div>
                     </div>
                 `;
             });
         }
 
+        // FUNGSI 6: AKSI TOMBOL SIMPAN MINI PER-LINK
+        function saveSingleLink(targetHrefId, inputId, btnElement) {
+            // Ambil nilai dari kolom input
+            let inputValue = document.getElementById(inputId).value.trim();
+            
+            // Tempelkan nilai tersebut ke tombol HTML yang tersembunyi di background
+            document.getElementById(targetHrefId).setAttribute('href', inputValue || '#');
+            
+            // Ubah tombol mini menjadi warna hijau "Tersimpan" sebagai konfirmasi
+            btnElement.classList.add('saved-success');
+            btnElement.innerHTML = "✅ Tersimpan";
+            
+            // Kembalikan ke warna oren setelah 2 detik
+            setTimeout(() => {
+                btnElement.classList.remove('saved-success');
+                btnElement.innerHTML = "💾 Simpan";
+            }, 2000);
+        }
+
         function closeAdmin() { document.getElementById('adminModal').style.display = 'none'; }
 
-        // FUNGSI 6: SIMPAN & DOWNLOAD HTML
+        // FUNGSI 7: COPY HTML KE CLIPBOARD
+        function copyHTML() {
+            closeAdmin();
+            setTimeout(() => {
+                let htmlContent = "<!DOCTYPE html>\n<html lang=\"id\">\n" + document.documentElement.outerHTML + "\n</html>";
+                navigator.clipboard.writeText(htmlContent).then(() => {
+                    alert("Sukses! Koding HTML berhasil disalin ke clipboard.\nSilakan Paste (Ctrl+V) di tempat yang Anda inginkan.");
+                }).catch(err => {
+                    alert("Maaf, gagal menyalin koding: " + err);
+                });
+            }, 300);
+        }
+
+        // FUNGSI 8: SIMPAN & DOWNLOAD HTML
         function saveAndDownload() {
             closeAdmin();
-
             setTimeout(() => {
                 let htmlContent = "<!DOCTYPE html>\n<html lang=\"id\">\n" + document.documentElement.outerHTML + "\n</html>";
                 let blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
                 let a = document.createElement("a");
                 a.href = URL.createObjectURL(blob);
-                a.download = "Portal_CBT_SMPN61_All_Class.html"; 
+                a.download = "Portal_CBT_SMPN61_Final.html"; 
                 
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
                 
-                alert("Sukses! File Portal_CBT_SMPN61_All_Class.html berhasil diunduh. \nSemua tautan 3 tingkatan kelas beserta status gemboknya telah tersimpan otomatis.");
+                alert("Sukses! File Portal_CBT_SMPN61_Final.html berhasil diunduh.");
             }, 500);
         }
 
